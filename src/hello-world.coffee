@@ -1,9 +1,8 @@
 express = require('express')
 SerialPort = require('serialport').SerialPort
 
-# Serial Port Initialization
-
-serialPort = new SerialPort('/dev/ttyACM0', {
+##### Serial Port Initialization #####
+serialPort = new SerialPort('/dev/tty.usbmodem141411', {
 	baudrate: 9600
 })
 
@@ -14,11 +13,40 @@ serialPort.on('open', () ->
 	)
 )
 
-# Express HTTP Endpoint Initialization
+##### Express HTTP Endpoint Initialization #####
 app = express()
+app.use(express.static('assets'))
+app.use(express.bodyParser()) # Used to parse POST payload
+
+# For serving assets
+app.use('/css', express.static(__dirname + '/css'))
+app.use('/js', express.static(__dirname + '/js'))
 
 app.get('/led', (req, res) ->
-	res.send('Hello World')
+	context = { color : '#ffffff' }
+	res.render('led-rope.jade', context)
+)
+
+app.post('/led', (req, res) ->
+	console.log(req.body)	
+	color = req.body.color
+	
+	redString = color.substring(1, 3)
+	blueString = color.substring(3, 5)
+	greenString = color.substring(5, 7)
+
+	console.log(redString)
+	console.log(blueString)
+	console.log(greenString)
+
+	redByte = parseInt(redString, 16)
+	blueByte = parseInt(blueString, 16)
+	greenByte = parseInt(greenString, 16)
+
+	serialPort.write(new Buffer([redByte, greenByte, blueByte]))	
+
+	context = { color : color }
+	res.render('led-rope.jade', context)
 )
 
 app.get('/led/on', (req, res) ->

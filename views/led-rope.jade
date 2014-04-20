@@ -1,0 +1,14 @@
+extends base
+
+block title
+	title LED Rope Dashboard
+
+block append css
+//- Include page specific css here.
+
+block content
+	ul.led-rope
+		- for (var x = 0; x < 1; x++)
+			li.led
+				include led.jade
+
