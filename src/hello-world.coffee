@@ -2,9 +2,15 @@ express = require('express')
 SerialPort = require('serialport').SerialPort
 
 ##### Serial Port Initialization #####
-serialPort = new SerialPort('/dev/tty.usbmodem141411', {
-	baudrate: 9600
-})
+serialPort = new SerialPort(
+	'/dev/tty.usbmodem141411',
+	{
+		baudrate: 9600
+	},
+	true,
+	(error) ->
+		console.log(error)
+)
 
 serialPort.on('open', () ->
 	console.log('Serial Port Open')
@@ -21,6 +27,10 @@ app.use(express.bodyParser()) # Used to parse POST payload
 # For serving assets
 app.use('/css', express.static(__dirname + '/css'))
 app.use('/js', express.static(__dirname + '/js'))
+
+app.get('/', (req, res) ->
+	res.send('home')
+)
 
 app.get('/led', (req, res) ->
 	context = { color : '#ffffff' }
