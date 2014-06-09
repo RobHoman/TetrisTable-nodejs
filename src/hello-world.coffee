@@ -1,5 +1,12 @@
+##### IMPORTS #####
+## 3rd Party ##
 express = require('express')
 SerialPort = require('serialport').SerialPort
+
+## 1st Party ##
+Color = require('./models/Color').Color
+LED = require('./models/LED').LED
+LEDRope = require('./models/LEDRope').LEDRope
 
 ##### Serial Port Initialization #####
 serialPort = new SerialPort(
@@ -29,12 +36,26 @@ app.use('/css', express.static(__dirname + '/css'))
 app.use('/js', express.static(__dirname + '/js'))
 
 app.get('/', (req, res) ->
-	res.send('home')
+	led = new LED(new Color({
+		red: 50,
+		green: 50,
+		blue: 50,
+	}))
+	res.send(led.toJSON())
 )
 
 app.get('/led', (req, res) ->
-	context = { color : '#ffffff' }
-	res.render('led-rope.jade', context)
+	led = new LED(new Color({
+		red: 50,
+		green: 50,
+		blue: 50,
+	}))
+
+	context = {
+		led: led,
+	}
+
+	res.render('led.jade', context)
 )
 
 app.post('/led', (req, res) ->
@@ -53,7 +74,7 @@ app.post('/led', (req, res) ->
 	blueByte = parseInt(blueString, 16)
 	greenByte = parseInt(greenString, 16)
 
-	serialPort.write(new Buffer([redByte, greenByte, blueByte]))	
+	serialPort.write(new Buffer([redByte, greenByte, blueByte]))
 
 	context = { color : color }
 	res.render('led-rope.jade', context)
@@ -69,6 +90,16 @@ app.get('/led/off', (req, res) ->
 	console.log('Trying to turn led off...')
 	serialPort.write(new Buffer('1'))
 	res.send('Trying to turn led off...')
+)
+
+app.get('/leds', (req, res) ->
+	ledRope = new LEDRope(9)
+
+	context = {
+		ledRope: ledRope,
+	}
+
+	res.render('led-rope.jade', context)
 )
 
 server = app.listen(3000, () ->

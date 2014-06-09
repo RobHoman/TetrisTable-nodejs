@@ -1,0 +1,5 @@
+mixin led(led)
+	div
+		form(name='pick-color', action='/led', method='post')
+			input(name='color', type='color', value='#{ led.color.toHexString() }')
+			input(type='submit', value='Update Color')

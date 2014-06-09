@@ -1,5 +1,8 @@
 extends base
 
+//- Include mixins
+include led-mixin.jade
+
 block title
 	title LED Rope Dashboard
 
@@ -8,7 +11,6 @@ block append css
 
 block content
 	ul.led-rope
-		- for (var x = 0; x < 1; x++)
+		- for (var i = 0; i < ledRope.length(); i++)
 			li.led
-				include led.jade
-
+				+led(ledRope.leds[i])

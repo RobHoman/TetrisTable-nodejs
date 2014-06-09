@@ -21,7 +21,7 @@ module.exports = function(grunt) {
     coffee: {
       glob_to_multiple: {
         expand: true,
-        flatten: true,
+        flatten: false,
         cwd: 'src/',
         src: ['**/*.coffee'],
         dest: 'build/coffee/',
