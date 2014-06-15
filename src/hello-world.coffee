@@ -30,6 +30,13 @@ serialPort.on('open', () ->
 ##### Express HTTP Endpoint Initialization #####
 app = express()
 
+# For serving assets
+app.use('/css', express.static('assets/css'))
+app.use('/js', express.static('assets/js'))
+app.use('/bower', express.static('bower_components/'))
+
+app.use(express.bodyParser()) # Used to parse POST payload
+
 server = app.listen(3000, () ->
 	console.log('Listening on port %d', server.address().port)
 )
@@ -42,14 +49,6 @@ io.on('connection', (socket) ->
 		console.log(data)
 	)
 )
-
-
-app.use(express.static('assets'))
-app.use(express.bodyParser()) # Used to parse POST payload
-
-# For serving assets
-app.use('/css', express.static(__dirname + '/css'))
-app.use('/js', express.static(__dirname + '/js'))
 
 app.get('/', (req, res) ->
 	led = new LED(new Color({
