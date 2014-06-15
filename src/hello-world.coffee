@@ -2,6 +2,7 @@
 ## 3rd Party ##
 express = require('express')
 SerialPort = require('serialport').SerialPort
+socketIO = require('socket.io')
 
 ## 1st Party ##
 Color = require('./models/Color').Color
@@ -28,6 +29,21 @@ serialPort.on('open', () ->
 
 ##### Express HTTP Endpoint Initialization #####
 app = express()
+
+server = app.listen(3000, () ->
+	console.log('Listening on port %d', server.address().port)
+)
+
+io = socketIO(server)
+
+io.on('connection', (socket) ->
+	socket.emit('news', { hello: 'world' })
+	socket.on('my other event', (data) ->
+		console.log(data)
+	)
+)
+
+
 app.use(express.static('assets'))
 app.use(express.bodyParser()) # Used to parse POST payload
 
@@ -59,7 +75,7 @@ app.get('/led', (req, res) ->
 )
 
 app.post('/led', (req, res) ->
-	console.log(req.body)	
+	console.log(req.body)
 	color = req.body.color
 	
 	redString = color.substring(1, 3)
@@ -102,8 +118,6 @@ app.get('/leds', (req, res) ->
 	res.render('led-rope.jade', context)
 )
 
-server = app.listen(3000, () ->
-	console.log('Listening on port %d', server.address().port)
-)
+
 
 
