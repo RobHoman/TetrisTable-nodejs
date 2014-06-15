@@ -1,0 +1,21 @@
+{
+  "name": "TetrisTable-nodejs",
+  "version": "0.0.1",
+  "homepage": "https://github.com/TheBobalos/TetrisTable-nodejs",
+  "authors": [
+    "Rob Homan <homan.robertc@gmail.com>"
+  ],
+  "description": "Client-side dependencies for the TetrisTable web interface.",
+  "moduleType": [
+    "globals"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
