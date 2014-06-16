@@ -12,5 +12,5 @@ block append css
 block content
 	ul.led-rope
 		- for (var i = 0; i < ledRope.length(); i++)
-			li.led
+			li.led('data-index' = i)
 				+led(ledRope.leds[i])
