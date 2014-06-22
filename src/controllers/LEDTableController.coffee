@@ -4,21 +4,21 @@
 ### 1st Party ###
 Color = require('../models/Color').Color
 LED = require('../models/LED').LED
-LEDRope = require('../models/LEDRope').LEDRope
+LEDTable = require('../models/LEDTable').LEDTable
 
 ##
 # Initialize this controller.
 # @param app An express application instance to which endpoints will be registered.
 ##
 init = (app) ->
-	app.get('/leds', (req, res) ->
-		ledRope = new LEDRope(10)
+	app.get('/table', (req, res) ->
+		ledTable = new LEDTable(10, 10)
 
 		context = {
-			ledRope: ledRope,
+			ledTable: ledTable,
 		}
 
-		res.render('led-rope.jade', context)
+		res.render('led-table.jade', context)
 	)
 
 ##

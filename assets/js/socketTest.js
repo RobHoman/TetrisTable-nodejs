@@ -1,14 +1,18 @@
-var socket = io.connect('http://localhost');
+var socket = io.connect('http://192.168.0.35');
 socket.on('news', function(data) {
 	console.log(data);
 	socket.emit('my other event', { my: 'data' });
 });
 
-$('.led').on("click", function(event) {
-	handleLEDClick($(this));
+$('.led').on("change", function(event) {
+	var listItem = $(this);
+	var colorInput = $(this).children('input');
+	handleLEDClick(listItem.data('index'), colorInput.val());
 });
 
-function handleLEDClick(listItem) {
-	var index = listItem.data('index');
-	socket.emit('led', { index: index });
+function handleLEDClick(index, color) {
+	socket.emit('ledChange', { 
+		index: index,
+		color: color       
+	});
 }

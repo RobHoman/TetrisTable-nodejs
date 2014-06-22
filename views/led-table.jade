@@ -1,0 +1,18 @@
+extends led-table-frame
+
+//- Include mixins
+include led-mixin.jade
+
+block title
+	title Tetris Table Dashboard
+
+block append css
+	//- Include page specific css here.
+
+block table
+	table.led-table
+		- for (var i = 0; i < ledTable.length(); i++)
+			tr.led-table-row('data-row' = i)
+				- for (var j = 0; j < ledTable.width(); j++)
+					td.led-table-col('data-column' = j)
+						+led(ledTable.get(i, j))

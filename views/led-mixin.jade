@@ -1,6 +1,2 @@
 mixin led(led)
-	div(style=('background-color:' + '#{ led.color.toHexString() }'))
-
-		//- form(name='pick-color', action='/led', method='post')
-		//-	input(name='color', type='color', value='#{ led.color.toHexString() }')
-		//-	input(type='submit', value='Update Color')
+	input(name='color', type='color', value='#{ led.color.toHexString() }')

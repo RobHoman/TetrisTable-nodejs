@@ -6,10 +6,12 @@ html
 		//- css
 		block css
 			link(rel='stylesheet', href='/css/styles.css', type='text/css')
+			link(rel='stylesheet', href='/bower/spectrum/spectrum.css')
 	body
 		block content
 
 		block javascript
-			script(type='text/javascript' src='/socket.io/socket.io.js')
 			script(type='text/javascript' src='/bower/jquery/dist/jquery.min.js')
+			script(type='text/javascript' src='/bower/spectrum/spectrum.js')
+			script(type='text/javascript' src='/socket.io/socket.io.js')
 			script(type='text/javascript' src='/js/socketTest.js')
