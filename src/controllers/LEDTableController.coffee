@@ -2,9 +2,10 @@
 ### 3rd Party ###
 
 ### 1st Party ###
-Color = require('../models/Color').Color
-LED = require('../models/LED').LED
 LEDTable = require('../models/LEDTable').LEDTable
+
+LENGTH = 10
+WIDTH = 20
 
 ##
 # Initialize this controller.
@@ -12,7 +13,7 @@ LEDTable = require('../models/LEDTable').LEDTable
 ##
 init = (app) ->
 	app.get('/table', (req, res) ->
-		ledTable = new LEDTable(10, 10)
+		ledTable = new LEDTable(LENGTH, WIDTH)
 
 		context = {
 			ledTable: ledTable,

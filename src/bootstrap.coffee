@@ -2,9 +2,9 @@
 ## 3rd Party ##
 express = require('express')
 socketIO = require('socket.io')
-
+OutputManager = require('./application/OutputManager').OutputManager
+TetrisEngine = require('./application/TetrisEngine').TetrisEngine
 ## 1st Party ##
-
 
 
 ##### Express HTTP Endpoint Initialization #####
@@ -27,11 +27,24 @@ server = app.listen(3000, () ->
 	console.log('Listening on port %d', server.address().port)
 )
 
-io = socketIO(server)
-
-
+allWebSockets = socketIO(server)
 
 ##
-# Bootstrap the socket listeners
+# Define the socket. 
 ##
-require('./sockets/LEDRopeSocket')(io)
+allWebSockets.on('connection', (socket) ->
+	console.log('IO received connection.')
+	# socket.on('input', (data) ->
+	# 	console.log('Socket emitted input data:', data)
+	# 	inputManager.emit('input', data)
+	# )
+)
+
+##
+# Initialize the OutputManager
+##
+outputManager = new OutputManager(allWebSockets)
+
+tetrisEngine = new TetrisEngine(outputManager)
+
+tetrisEngine.start()

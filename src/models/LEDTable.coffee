@@ -19,6 +19,11 @@ class exports.LEDTable
 				)
 	get: (i, j) ->
 		return @leds[i][j]
+	
+	set: (i, j, led) ->
+		#TODO: Validate that the object has type LED
+		@leds[i][j] = led
+	
 	length: () ->
 		return @leds.length
 	width: () ->
