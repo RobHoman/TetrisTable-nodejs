@@ -6,6 +6,12 @@ OutputManager = require('./application/OutputManager').OutputManager
 TetrisEngine = require('./application/TetrisEngine').TetrisEngine
 ## 1st Party ##
 
+##
+# Define the dimensions of the table
+##
+TABLE_LENGTH = 20
+TABLE_WIDTH = 10
+
 ##### Express HTTP Endpoint Initialization #####
 app = express()
 
@@ -19,7 +25,7 @@ app.use(express.bodyParser()) # Used to parse POST payload
 ##
 # Bootstrap the controllers
 ##
-require('./controllers/LEDTableController')(app)
+require('./controllers/LEDTableController')(app, TABLE_LENGTH, TABLE_WIDTH)
 
 server = app.listen(3000, () ->
 	console.log('Listening on port %d', server.address().port)
@@ -43,6 +49,6 @@ allWebSockets.on('connection', (socket) ->
 ##
 outputManager = new OutputManager(allWebSockets)
 
-tetrisEngine = new TetrisEngine(outputManager)
+tetrisEngine = new TetrisEngine(outputManager, TABLE_LENGTH, TABLE_WIDTH)
 
 tetrisEngine.start()

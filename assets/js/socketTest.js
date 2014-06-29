@@ -16,12 +16,14 @@ function updateTable(leds) {
 
 
 
+/**
 $('.led').on("change", function(event) {
 	var listItem = $(this);
 	var colorInput = $(this).children('input');
 	handleLEDClick(listItem.data('index'), colorInput.val());
 	handleInput();
 });
+*/
 
 
 function handleLEDClick(index, color) {

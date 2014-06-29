@@ -4,16 +4,14 @@
 ### 1st Party ###
 LEDTable = require('../models/LEDTable').LEDTable
 
-LENGTH = 10
-WIDTH = 20
 
 ##
 # Initialize this controller.
 # @param app An express application instance to which endpoints will be registered.
 ##
-init = (app) ->
+init = (app, tableLength, tableWidth) ->
 	app.get('/table', (req, res) ->
-		ledTable = new LEDTable(LENGTH, WIDTH)
+		ledTable = new LEDTable(tableLength, tableWidth)
 
 		context = {
 			ledTable: ledTable,

@@ -6,29 +6,6 @@ body {
 }
 
 /**
- * LEDRope-specific styles
- */
-ul.led-rope {
-	list-style-type: none;
-	margin: 0px;
-	padding: 0px;
-}
-
-ul.led-rope li {
-	display: inline-block;
-	height: 40px;
-	width: 40px;
-}
-
-ul.led-rope li input {
-	border: 0px;
-	height: 100%;
-	margin: 0px;
-	padding: 0px;
-	width: 100%;
-}
-
-/**
  * LEDTable-specific styles
  */
 table.led-table {
@@ -40,9 +17,9 @@ table.led-table tr {
 }
 
 table.led-table td {
-	height: 40px;
+	height: 30px;
 	padding: 0px;
-	width: 40px;
+	width: 30px;
 }
 
 table.led-table input {
@@ -53,15 +30,9 @@ table.led-table input {
 	width: 100%;
 }
 
-.table-frame {
-	height: 100%;
-	padding: 40px;
-	width: 100%;
-}
-
-.table {
-	background-color: #ffffff;
+#table-container {
 	display: inline-block;
+	margin-top: 40px;
 }
 
 /** 

@@ -16,7 +16,7 @@ class exports.TetrisEngine
 	
 	@switch = false
 
-	constructor: (@outputManager) ->
+	constructor: (@outputManager, @length, @width) ->
 		@eventBus = new ClockedEventEmitter()
 		@eventBus.on('updateModels', () =>
 			# console.log('updateModels event received...')
@@ -37,7 +37,7 @@ class exports.TetrisEngine
 
 	onUpdateModels: () ->
 
-		updatedModels = new LEDTable(10, 20)
+		updatedModels = new LEDTable(@length, @width)
 
 		if (@switch)
 			updatedModels.set(5, 5, new LED(255, 0, 0)) 
