@@ -6,7 +6,6 @@ class exports.Color
 		@blue = args?.blue ? 0
 		
 	toHexString: () ->
-		# TODO: implement this
 		return '#' + convertToHex(@red) + convertToHex(@green) + convertToHex(@blue) 
 
 	toJSON: () ->

@@ -5,7 +5,7 @@ LED = require('../models/LED').LED
 LEDTable = require('../models/LEDTable').LEDTable
 
 ENGINE_HZ = 3 # Could vary this value over time as the game speeds up
-FPS = 60 # Defines the frame rate of the output
+FPS = 30 # Defines the frame rate of the output
 
 ### 1ST PARTY ###
 ## TODO: could all event bus logic can be surfaced one layer up to some kind of Application class?
@@ -40,7 +40,7 @@ class exports.TetrisEngine
 		updatedModels = new LEDTable(10, 20)
 
 		if (@switch)
-			updatedModels.set(5, new LED(55, 55, 55)) 
+			updatedModels.set(5, 5, new LED(255, 0, 0)) 
 
 		@switch = !@switch
 
