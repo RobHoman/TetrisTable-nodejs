@@ -14,9 +14,14 @@ class exports.TetrisEngine
 	@outputManager
 	@eventBus
 	
-	@switch = false
+	@currentI
+	@currentJ
 
 	constructor: (@outputManager, @length, @width) ->
+
+		@currentI = 0
+		@currentJ = 0
+
 		@eventBus = new ClockedEventEmitter()
 		@eventBus.on('updateModels', () =>
 			# console.log('updateModels event received...')
@@ -36,13 +41,15 @@ class exports.TetrisEngine
 		@eventBus.emitOnInterval(1000 / FPS, 'sendOutput')
 
 	onUpdateModels: () ->
-
 		updatedModels = new LEDTable(@length, @width)
+		updatedModels.set(@currentI, @currentJ, new LED(255, 0, 0)) 
 
-		if (@switch)
-			updatedModels.set(5, 5, new LED(255, 0, 0)) 
-
-		@switch = !@switch
+		@currentJ++
+		if(@currentJ == @width)
+			@currentJ = 0
+			@currentI++
+		if (@currentI == @length)
+			@currentI = 0
 
 		@eventBus.emit('endUpdateModels', updatedModels)
 
