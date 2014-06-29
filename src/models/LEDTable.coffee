@@ -10,13 +10,7 @@ class exports.LEDTable
 	constructor: (length, width) ->
 		@leds = [0..(length - 1)].map () ->
 			[0..(width - 1)].map () ->
-				new LED(
-					new Color({
-						red: 0,
-						green: 0,
-						blue: 0,
-					})
-				)
+				new LED(0, 0, 0)
 	get: (i, j) ->
 		return @leds[i][j]
 	

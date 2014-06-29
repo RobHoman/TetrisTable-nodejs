@@ -1,12 +1,31 @@
 class exports.Color
 
-	constructor: (args) ->
-		@red = args?.red ? 0
-		@green = args?.green ? 0
-		@blue = args?.blue ? 0
-		
+	constructor: (args...) ->
+		#TODO: validate that the rgb values are between 0 and 255
+		if (args.length == 3)
+			@red = args[0]
+			@green = args[1]
+			@blue = args[2]
+		else if (args.length == 1)
+			@red = args?.red ? 0
+			@green = args?.green ? 0
+			@blue = args?.blue ? 0
+		else
+			@red = 0
+			@green = 0
+			@blue = 0
+
+	getRed: () ->
+		return @red
+
+	getGreen: () ->
+		return @green
+
+	getBlue: () ->
+		return @blue
+
 	toHexString: () ->
-		return '#' + convertToHex(@red) + convertToHex(@green) + convertToHex(@blue) 
+		return '#' + convertToHex(@red) + convertToHex(@green) + convertToHex(@blue)
 
 	toJSON: () ->
 		return json = {

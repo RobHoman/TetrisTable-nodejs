@@ -19,7 +19,7 @@ class exports.OutputManager
 	setNextFrame: (nextFrame) ->
 		nextFrame = nextFrame[0]
 		# Convert the frame to a nice form for outputting to DOM
-		htmlFrame = ((nextFrame.get(i, j).color.toHexString() for j in [0..nextFrame.width() - 1]) for i in [0..nextFrame.length() - 1])
+		htmlFrame = ((nextFrame.get(i, j).toHexString() for j in [0..nextFrame.width() - 1]) for i in [0..nextFrame.length() - 1])
 		@nextFrame = htmlFrame
 
 	onSendOutput: () ->
