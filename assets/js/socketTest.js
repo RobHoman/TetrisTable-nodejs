@@ -15,6 +15,25 @@ function updateTable(leds) {
 }
 
 
+$('body').keypress(function(event) {
+	
+	console.log(event);
+
+	var charCode = event.charCode;
+	var key = 'up';
+
+	if (charCode === 119)
+		key = 'up';
+	else if (charCode === 97)
+		key = 'left';
+	else if (charCode === 115)
+		key = 'down';
+	else if (charCode === 100)
+		key = 'right';
+
+	console.log(key);
+	socket.emit('keypress', key);
+});
 
 /**
 $('.led').on("change", function(event) {

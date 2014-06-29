@@ -2,6 +2,8 @@
 ## 3rd Party ##
 express = require('express')
 socketIO = require('socket.io')
+EventEmitter = require('events').EventEmitter
+
 ## 1st Party ##
 ClockedEventEmitter = require('./ClockedEventEmitter').ClockedEventEmitter
 OutputManager = require('./application/OutputManager').OutputManager
@@ -35,14 +37,19 @@ server = app.listen(3000, () ->
 allWebSockets = socketIO(server)
 
 ##
+# Initialize the InputManager
+##
+inputEventEmitter = new EventEmitter()
+
+##
 # Define the socket. 
 ##
 allWebSockets.on('connection', (socket) ->
 	console.log('IO received connection.')
-	# socket.on('input', (data) ->
-	# 	console.log('Socket emitted input data:', data)
-	# 	inputManager.emit('input', data)
-	# )
+	socket.on('keypress', (data) ->
+		console.log('Socket emitted input data:', data)
+		inputEventEmitter.emit('keypress', data)
+	)
 )
 
 ##
@@ -65,3 +72,15 @@ outputEventBus.emitOnInterval(1000 / FPS, 'sendOutput')
 tetrisEngine = new TetrisEngine(outputManager, TABLE_LENGTH, TABLE_WIDTH)
 
 tetrisEngine.start()
+
+inputEventEmitter.on('keypress', (key) ->
+	if (key == 'up')
+		tetrisEngine.up()
+	else if (key == 'right')
+		tetrisEngine.right()
+	else if (key == 'down')
+		tetrisEngine.down()
+	else if (key == 'left')
+		tetrisEngine.left()
+)
+
