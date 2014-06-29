@@ -6,7 +6,6 @@ OutputManager = require('./application/OutputManager').OutputManager
 TetrisEngine = require('./application/TetrisEngine').TetrisEngine
 ## 1st Party ##
 
-
 ##### Express HTTP Endpoint Initialization #####
 app = express()
 
@@ -20,7 +19,6 @@ app.use(express.bodyParser()) # Used to parse POST payload
 ##
 # Bootstrap the controllers
 ##
-require('./controllers/LEDRopeController')(app)
 require('./controllers/LEDTableController')(app)
 
 server = app.listen(3000, () ->
