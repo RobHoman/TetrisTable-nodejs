@@ -2,9 +2,10 @@
 ## 3rd Party ##
 express = require('express')
 socketIO = require('socket.io')
+## 1st Party ##
+ClockedEventEmitter = require('./ClockedEventEmitter').ClockedEventEmitter
 OutputManager = require('./application/OutputManager').OutputManager
 TetrisEngine = require('./application/TetrisEngine').TetrisEngine
-## 1st Party ##
 
 ##
 # Define the dimensions of the table
@@ -47,8 +48,20 @@ allWebSockets.on('connection', (socket) ->
 ##
 # Initialize the OutputManager
 ##
+FPS = 30 # Defines the frame rate of the output
 outputManager = new OutputManager(allWebSockets)
+outputEventBus = new ClockedEventEmitter()
 
+outputEventBus.on('sendOutput', () =>
+	# console.log('sendOutput event received...')
+	outputManager.onSendOutput()
+)
+
+outputEventBus.emitOnInterval(1000 / FPS, 'sendOutput')
+
+##
+# Initialize the TetrisEngine
+##
 tetrisEngine = new TetrisEngine(outputManager, TABLE_LENGTH, TABLE_WIDTH)
 
 tetrisEngine.start()
