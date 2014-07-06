@@ -17,8 +17,19 @@ class exports.LEDTable
 	set: (i, j, led) ->
 		#TODO: Validate that the object has type LED
 		@leds[i][j] = led
-	
+		return
+
 	length: () ->
 		return @leds.length
 	width: () ->
 		return @leds[0].length
+
+	##
+	# Returns a copy of this LEDTable instance.
+	##
+	copy: () ->
+		ledTable = new LEDTable(this.length(), this.width())
+		[0..(this.length() - 1)].map (i) =>
+			[0..(this.width() - 1)].map (j) =>
+				ledTable.set(i, j, this.get(i, j).copy())
+		return ledTable

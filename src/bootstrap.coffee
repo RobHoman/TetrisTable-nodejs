@@ -69,18 +69,8 @@ outputEventBus.emitOnInterval(1000 / FPS, 'sendOutput')
 ##
 # Initialize the TetrisEngine
 ##
-tetrisEngine = new TetrisEngine(outputManager, TABLE_LENGTH, TABLE_WIDTH)
+tetrisEngine = new TetrisEngine(inputEventEmitter, outputManager)
 
 tetrisEngine.start()
 
-inputEventEmitter.on('keypress', (key) ->
-	if (key == 'up')
-		tetrisEngine.up()
-	else if (key == 'right')
-		tetrisEngine.right()
-	else if (key == 'down')
-		tetrisEngine.down()
-	else if (key == 'left')
-		tetrisEngine.left()
-)
 

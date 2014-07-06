@@ -15,21 +15,23 @@ function updateTable(leds) {
 }
 
 
-$('body').keypress(function(event) {
+$('body').keydown(function(event) {
 	
-	console.log(event);
+	// console.log(event);
 
-	var charCode = event.charCode;
+	var keyCode = event.keyCode;
 	var key = 'up';
 
-	if (charCode === 119)
+	if (keyCode === 87 || keyCode === 38)
 		key = 'up';
-	else if (charCode === 97)
+	else if (keyCode === 65 || keyCode === 37)
 		key = 'left';
-	else if (charCode === 115)
+	else if (keyCode === 83 || keyCode === 40)
 		key = 'down';
-	else if (charCode === 100)
+	else if (keyCode === 68 || keyCode === 39)
 		key = 'right';
+	else
+		return;
 
 	console.log(key);
 	socket.emit('keypress', key);

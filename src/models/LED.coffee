@@ -8,6 +8,7 @@ class exports.LED
 		else if (args.length == 1)
 			# TODO: validate that the single arg has type Color
 			@color = args[0]
+			
 		else
 			@color = color ? new Color(0, 0, 0)
 
@@ -28,3 +29,10 @@ class exports.LED
 			color: @color.toJSON()
 		}
 	
+	copy: () ->
+		return new LED(this.getRed(), this.getGreen(), this.getBlue())
+
+	equals: (other) ->
+		if (other.getRed() == this.getRed() and other.getGreen() == this.getGreen() and other.getBlue() == this.getBlue())
+			return true
+		return false

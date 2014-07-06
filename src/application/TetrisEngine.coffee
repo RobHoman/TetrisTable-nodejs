@@ -5,60 +5,41 @@
 ClockedEventEmitter = require('../ClockedEventEmitter').ClockedEventEmitter
 LED = require('../models/LED').LED
 LEDTable = require('../models/LEDTable').LEDTable
+TetrisBoard = require('../models/tetris/TetrisBoard').TetrisBoard
 
-ENGINE_HZ = 3 # Could vary this value over time as the game speeds up
+ENGINE_HZ = 2 # Could vary this value over time as the game speeds up
 
-## TODO: could all event bus logic can be surfaced one layer up to some kind of Application class?
 class exports.TetrisEngine
 
+	@inputEventEmitter
 	@outputManager
 	@engineEventBus
-	
-	@currentI
-	@currentJ
+	@tetrisBoard
 
-	constructor: (@outputManager, @length, @width) ->
-
-		@currentI = 0
-		@currentJ = 0
-
+	constructor: (@inputEventEmitter, @outputManager) ->
 		@engineEventBus = new ClockedEventEmitter()
 		@engineEventBus.on('clockTick', () =>
-			# console.log('updateModels event received...')
 			this.onUpdateModels()
+		)
+		@tetrisBoard = new TetrisBoard()
+
+		@inputEventEmitter.on('keypress', (key) =>
+			if (key == 'up')
+				@tetrisBoard.rotateShape()
+			else if (key == 'right')
+				@tetrisBoard.moveShapeRight()
+			else if (key == 'down')
+				@tetrisBoard.moveShapeDown()
+			else if (key == 'left')
+				@tetrisBoard.moveShapeLeft()
+
+			@outputManager.setNextFrame(@tetrisBoard.getFrame())
 		)
 
 	start: () ->
 		@engineEventBus.emitOnInterval(1000 / ENGINE_HZ, 'clockTick')
 
 	onUpdateModels: () ->
-		updatedModels = new LEDTable(@length, @width)
-		updatedModels.set(@currentI, @currentJ, new LED(255, 0, 0))
+		@tetrisBoard.advanceActiveShape()
+		@outputManager.setNextFrame(@tetrisBoard.getFrame())
 
-		@outputManager.setNextFrame(updatedModels)
-
-	up: () ->
-		@currentI--
-		this.normalize()
-		this.onUpdateModels()
-	down: () ->
-		@currentI++
-		this.normalize()
-		this.onUpdateModels()
-	left: () ->
-		@currentJ--
-		this.normalize()
-		this.onUpdateModels()
-	right: () ->
-		@currentJ++
-		this.normalize()
-		this.onUpdateModels()
-	normalize: () ->
-		while (@currentI < 0)
-			@currentI += @length
-		while (@currentI >= @length)
-			@currentI -= @length
-		while (@currentJ < 0)
-			@currentJ += @width
-		while (@currentJ >= @width)
-			@currentJ -= @width
