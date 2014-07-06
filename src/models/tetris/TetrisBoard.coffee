@@ -48,7 +48,10 @@ class exports.TetrisBoard
 			@activeShape.moveRight()
 
 	rotateShape: () ->
-		@activeShape.rotate(this)
+		potentialShape = @activeShape.attemptRotate()
+
+		if (!potentialShape.collides(this))
+			@activeShape.rotate(this)
 
 	##
 	# Returns true if the square at this index is non-black.

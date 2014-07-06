@@ -77,6 +77,12 @@ class exports.Shape
 			}
 
 	rotate: () ->
+		throw new Exception('Method "rotate" must be implemented in the subclass.')
+
+	attemptRotate: () ->
+		potentialShape = this.copy()
+		potentialShape.rotate()
+		return potentialShape
 
 
 exports.Shape.I_SHAPE = "I"

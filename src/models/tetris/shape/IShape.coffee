@@ -47,10 +47,13 @@ class exports.IShape extends Shape
 					j: j,
 				}
 
-		# TODO: this collision logic doesn't account for left/right collisions
-		# if it collides, move it up until it doesn't
-		while (this.collides(tetrisBoard))
-			this.moveUp()
-
 		@rotationSwitch = !@rotationSwitch
+
+	copy: () ->
+		copyShape = new IShape()
+		copyShape.rotationSwitch = @rotationSwitch
+		copyShape.color = @color
+		copyShape.coordinates = @coordinates
+		return copyShape
+
 
