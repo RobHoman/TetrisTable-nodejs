@@ -1,19 +1,24 @@
+#### IMPORTS ####
+### 3rd Party ###
+
+### 1st Party ###
+ArgumentError = require('../error/ArgumentError').ArgumentError
+
 class exports.Color
 
 	constructor: (args...) ->
-		#TODO: validate that the rgb values are between 0 and 255
 		if (args.length == 3)
 			@red = args[0]
 			@green = args[1]
 			@blue = args[2]
-		else if (args.length == 1)
-			@red = args?.red ? 0
-			@green = args?.green ? 0
-			@blue = args?.blue ? 0
-		else
+		else if(args.length == 0)
 			@red = 0
 			@green = 0
 			@blue = 0
+		else
+			throw new ArgumentError('The Color constructor only accepts 0 or 3 arguments.')
+
+		validateRange(integer) for integer in [@red, @green, @blue]
 
 	getRed: () ->
 		return @red
@@ -39,3 +44,7 @@ convertToHex = (integer) ->
 	str = Number(integer).toString(16)
 	# prepend a '0' to numbers that are a single hexit long
 	return if str.length == 1 then "0" + str else str
+
+validateRange = (integer) ->
+	if (integer < 0 or integer > 255)
+		throw new RangeError('The Color constructor only accepts integer arguments between 0 and 255 inclusive.')
