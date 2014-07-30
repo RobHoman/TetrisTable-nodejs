@@ -1,16 +1,23 @@
+#### IMPORTS ####
+### 3rd Party ###
+assert = require('chai').assert
+### 1st Party ###
+ArgumentError = require('../error/ArgumentError').ArgumentError
 Color = require('./Color').Color
 
 class exports.LED
 	
-	constructor: (args...) -> 
+	constructor: (args...) ->
 		if (args.length == 3)
 			@color = new Color(args[0], args[1], args[2])
 		else if (args.length == 1)
-			# TODO: validate that the single arg has type Color
+			assert.instanceOf(args[0], Color, 'The single argument must be an instance of Color')
 			@color = args[0]
 			
-		else
+		else if (args.length == 0)
 			@color = color ? new Color(0, 0, 0)
+		else
+			throw new ArgumentError('The LED constructor only accepts 0, 1 or 3 arguments.')
 
 	getRed: () ->
 		return @color.getRed()
