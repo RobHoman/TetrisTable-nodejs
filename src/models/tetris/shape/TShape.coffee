@@ -6,23 +6,23 @@ Color = require('../../Color').Color
 config = require('../../../config')
 Shape = require('./Shape').Shape
 
-class exports.IShape extends Shape
+class exports.TShape extends Shape
 
 	constructor: () ->
 		super()
-		@_color = Color.fromHexString(config.tetris.shape.i.COLOR)
+		@_color = Color.fromHexString(config.tetris.shape.t.COLOR)
 
 	getCoordinates: () ->
-		return IShape._ROTATION_STATES[@_rotationStateIndex]
+		return TShape._ROTATION_STATES[@_rotationStateIndex]
 
 	rotate: () ->
 		@_rotationStateIndex++
-		if(@_rotationStateIndex >= 2)
+		if(@_rotationStateIndex >= 4)
 			@_rotationStateIndex = 0
 		return @
 
 	copy: () ->
-		copy = new IShape()
+		copy = new TShape()
 		copy._color = @_color
 		copy._rotationStateIndex = @_rotationStateIndex
 		return copy
@@ -32,12 +32,24 @@ class exports.IShape extends Shape
 			{ i: 0, j: 0 },
 			{ i: 0, j: 1 },
 			{ i: 0, j: 2 },
-			{ i: 0, j: 3 },
+			{ i: 1, j: 1 },
 		],
 		[
-			{ i: 0, j: 2 },
+			{ i: 0, j: 1 },
+			{ i: 1, j: 0 },
+			{ i: 1, j: 1 },
+			{ i: 2, j: 1 },
+		],
+		[
+			{ i: 0, j: 1 },
+			{ i: 1, j: 0 },
+			{ i: 1, j: 1 },
 			{ i: 1, j: 2 },
-			{ i: 2, j: 2 },
-			{ i: 3, j: 2 },
+		],
+		[
+			{ i: 0, j: 1 },
+			{ i: 1, j: 1 },
+			{ i: 1, j: 2 },
+			{ i: 2, j: 1 },
 		],
 	]
