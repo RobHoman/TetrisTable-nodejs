@@ -6,6 +6,8 @@ ArgumentError = require('../error/ArgumentError').ArgumentError
 Color = require('./Color').Color
 
 class exports.LED
+
+	@color
 	
 	constructor: (args...) ->
 		if (args.length == 3)
@@ -27,6 +29,9 @@ class exports.LED
 
 	getBlue: () ->
 		return @color.getBlue()
+
+	getColor: () ->
+		return @color
 	
 	toHexString: () ->
 		return @color.toHexString()
