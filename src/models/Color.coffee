@@ -1,5 +1,6 @@
 #### IMPORTS ####
 ### 3rd Party ###
+assert = require('chai').assert
 
 ### 1st Party ###
 ArgumentError = require('../error/ArgumentError').ArgumentError
@@ -29,6 +30,11 @@ class exports.Color
 	getBlue: () ->
 		return @blue
 
+	equals: (other) ->
+		if !(other instanceof Color)
+			return false
+		return (@red == other.red and @green == other.green and @blue == other.blue)
+
 	toHexString: () ->
 		return '#' + convertToHex(@red) + convertToHex(@green) + convertToHex(@blue)
 
@@ -38,6 +44,18 @@ class exports.Color
                         green: @green,
                         blue: @blue,
                 }
+
+	# @ sign makes this a static method, attached directly to
+	# the Color object, rather than to its prototype
+	@fromHexString: (hexString) ->
+		assert.equal(7, hexString.length)
+		assert.equal('#', hexString.charAt(0))
+	
+		red = parseInt(hexString.substring(1, 3), 16)
+		green = parseInt(hexString.substring(3, 5), 16)
+		blue = parseInt(hexString.substring(5, 7), 16)
+	
+		return new Color(red, green, blue)
 
 # private methods
 convertToHex = (integer) ->

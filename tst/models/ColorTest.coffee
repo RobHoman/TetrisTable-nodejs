@@ -38,7 +38,6 @@ describe('Color', () ->
 			).to.throw(RangeError) for args in argsList
 		)
 	)
-
 	describe('#toHexString()', () ->
 		it('Prepends return value with a pound sign.', () ->
 			color = new Color()
@@ -54,5 +53,28 @@ describe('Color', () ->
 			assert.equal("8b", hexString.substring(5, 7))
 		)
 	)
+	describe('#fromHexString()', () ->
+		it('Accepts length 7 strings prepended with #.', () ->
+			validStrings = ['#ff0909', '#000000', '#123456', '#abcdef']
+			assert.instanceOf(Color.fromHexString(string), Color) for string in validStrings
+		)
+		it('Rejects strings that are not length 7.', () ->
+			invalidStrings = ['f0909', '00000000', '', 'f', '123456789']
+			expect(() ->
+				Color.fromHexString(string)
+			).to.throw(Error) for strings in invalidStrings
+		)
+		it('Rejects strings that do not begin with #.', () ->
+			invalidStrings = ['af09039', 'p123456', '1234567']
+			expect(() ->
+				Color.fromHexString(string)
+			).to.throw(Error) for strings in invalidStrings
+		)
+		it('Converts a 24 bit hexadecimal number into the correct Color.', () ->
+			inputs = ['#0a418b', '#123456', '#ffcece', '#000102']
+			expectedOutputs = [new Color(10, 65, 139), new Color(18, 52, 86), new Color(255, 206, 206), new Color(0, 1, 2)]
 
+			assert(Color.fromHexString(inputs[i]).equals(expectedOutputs[i])) for i in [0..inputs.length-1]
+		)
+	)
 )
