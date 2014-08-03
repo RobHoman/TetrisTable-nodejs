@@ -1,16 +1,73 @@
+#### IMPORTS ####
+### 3rd Party ###
 assert = require('chai').assert
 expect = require('chai').expect
+### 1st Party ###
 ArgumentError = require('../../src/error/ArgumentError').ArgumentError
 Color = require('../../src/models/Color').Color
+Coordinate = require('../../src/models/Coordinate').Coordinate
 LED = require('../../src/models/LED').LED
 LEDTable = require('../../src/models/LEDTable').LEDTable
 
 describe('LEDTable', () ->
-	describe('#copy()', () ->
-		it('Returns a new LEDTable object equal to the copied LEDTable object.', () ->
-			ledTable = new LEDTable(20, 10)
-			copy = ledTable.copy()
-			assert.equal(ledTable.get(i, j), copy.get(i, j)) for j in ledTable.width() for i in ledTable.length()
+	describe('#constructor(length, width)', () ->
+		it('Initializes every LED to black.', () ->
+			ledTable = new LEDTable(15, 15)
+			blackLED = new LED(0, 0, 0)
+			assert(ledTable.get(i, j).equals(blackLED)) for j in [0..ledTable.width() - 1] for i in [0..ledTable.length() - 1]
+		)
+	)
+	describe('#get(args...)', () ->
+		ledTable = null
+		beforeEach(() ->
+			ledTable = new LEDTable(10, 5)
+		)
+		it('Treats a single argument as a Coordinate object', () ->
+			expect(() ->
+				ledTable.get('notACoordinateObject')
+			).to.throw(Error)
+		)
+		it('Treats two arguments as row and column indices', () ->
+			assert.instanceOf(ledTable.get(0, 0), LED)
+		)
+		it('Does not accept less than 1 args.', () ->
+			expect(() ->
+				ledTable.get()
+			).to.throw(ArgumentError)
+		)
+		it('Does not accept more than 2 args.', () ->
+			expect(() ->
+				ledTable.get(0, 0, 'thirdArg')
+			).to.throw(ArgumentError)
+		)
+	)
+	describe('#set(args...)', () ->
+		ledTable = null
+		beforeEach(() ->
+			ledTable = new LEDTable(10, 5)
+		)
+		it('Treats two arguments as a Coordinate object and an LED object.', () ->
+			expect(() ->
+				ledTable.set('notACoordinateObject', new LED(0, 0, 0))
+			).to.throw(Error)
+			expect(() ->
+				ledTable.set(new Coordinate(0, 0), 'notAnLEDObject')
+			).to.throw(Error)
+		)
+		it('Treats three arguments as a row index, column index, and LED object.', () ->
+			expect(() ->
+				ledTable.set(0, 0,  'notAnLEDObject')
+			).to.throw(Error)
+		)
+		it('Does not accept less than 2 args.', () ->
+			expect(() ->
+				ledTable.set(0)
+			).to.throw(ArgumentError)
+		)
+		it('Does not accept more than 3 args.', () ->
+			expect(() ->
+				ledTable.set(0, 0, new LED(0, 0, 0),'fourthArg')
+			).to.throw(ArgumentError)
 		)
 	)
 )
