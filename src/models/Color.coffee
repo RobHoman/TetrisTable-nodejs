@@ -6,43 +6,46 @@ assert = require('chai').assert
 ArgumentError = require('../error/ArgumentError').ArgumentError
 
 class exports.Color
+	@_red
+	@_green
+	@_blue
 
 	constructor: (args...) ->
 		if (args.length == 3)
-			@red = args[0]
-			@green = args[1]
-			@blue = args[2]
+			@_red = args[0]
+			@_green = args[1]
+			@_blue = args[2]
 		else if(args.length == 0)
-			@red = 0
-			@green = 0
-			@blue = 0
+			@_red = 0
+			@_green = 0
+			@_blue = 0
 		else
 			throw new ArgumentError('The Color constructor only accepts 0 or 3 arguments.')
 
-		validateRange(integer) for integer in [@red, @green, @blue]
+		validateRange(integer) for integer in [@_red, @_green, @_blue]
 
 	getRed: () ->
-		return @red
+		return @_red
 
 	getGreen: () ->
-		return @green
+		return @_green
 
 	getBlue: () ->
-		return @blue
+		return @_blue
 
 	equals: (other) ->
 		if !(other instanceof Color)
 			return false
-		return (@red == other.red and @green == other.green and @blue == other.blue)
+		return (@_red == other.getRed() and @_green == other.getGreen() and @_blue == other.getBlue())
 
 	toHexString: () ->
-		return '#' + convertToHex(@red) + convertToHex(@green) + convertToHex(@blue)
+		return '#' + convertToHex(@_red) + convertToHex(@_green) + convertToHex(@_blue)
 
 	toJSON: () ->
 		return json = {
-                        red: @red,
-                        green: @green,
-                        blue: @blue,
+                        red: @_red,
+                        green: @_green,
+                        blue: @_blue,
                 }
 
 	# @ sign makes this a static method, attached directly to
