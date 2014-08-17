@@ -38,6 +38,9 @@ class exports.Color
 			return false
 		return (@_red == other.getRed() and @_green == other.getGreen() and @_blue == other.getBlue())
 
+	copy: () ->
+		return new Color(@_red, @_green, @_blue)
+
 	toHexString: () ->
 		return '#' + convertToHex(@_red) + convertToHex(@_green) + convertToHex(@_blue)
 

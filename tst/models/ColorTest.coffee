@@ -38,6 +38,13 @@ describe('Color', () ->
 			).to.throw(RangeError) for args in argsList
 		)
 	)
+	describe('#copy()', () ->
+		it('Returns a Color object that is equal to the original Color object.', () ->
+			color = new Color(13, 21, 34)
+			copy = color.copy()
+			assert(color.equals(copy))
+		)
+	)
 	describe('#toHexString()', () ->
 		it('Prepends return value with a pound sign.', () ->
 			color = new Color()
