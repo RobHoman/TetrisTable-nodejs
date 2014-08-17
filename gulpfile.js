@@ -70,7 +70,7 @@ function createMochaTask(filePath) {
 	// the creation of this task.
 
 	
-	gulp.task('mocha-' + taskSuffix, function() {
+	gulp.task('mocha-' + taskSuffix, ['coffee', 'coffee-tst'],  function() {
 		return gulp.src(mochaSrcGlob)
 			.pipe(mocha({ reporter: 'spec'}));
 	});
