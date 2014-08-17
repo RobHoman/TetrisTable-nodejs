@@ -17,7 +17,7 @@ class exports.LED
 			@color = args[0]
 			
 		else if (args.length == 0)
-			@color = color ? new Color(0, 0, 0)
+			@color = new Color(0, 0, 0)
 		else
 			throw new ArgumentError('The LED constructor only accepts 0, 1 or 3 arguments.')
 

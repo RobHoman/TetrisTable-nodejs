@@ -95,3 +95,13 @@ class exports.LEDTable
 			[0..(this.width() - 1)].map (j) =>
 				ledTable.set(i, j, this.get(i, j).copy())
 		return ledTable
+
+	##
+	# Create an instance of LEDTable from a two-dimensional
+	# array of Color objects.
+	# @param colorArray A two-dimensional array of Color objects.
+	##
+	@from2DColorArray: (colorArray) ->
+		ledTable = new LEDTable(colorArray.length, colorArray[0].length)
+		ledTable.set(i, j, new LED(colorArray[i][j])) for j in [0..colorArray[0].length - 1] for i in [0..colorArray.length - 1]
+		return ledTable
