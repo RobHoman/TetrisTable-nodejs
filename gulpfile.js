@@ -62,16 +62,16 @@ function createMochaTask(filePath) {
 	var basename = path.basename(filePath, path.extname(filePath));
 	var taskSuffix = changeCase.paramCase(basename);
 	var mochaSrcGlob = filePath;
-	if (builtTstGlob.substr(-1) === '/') {
+	if (mochaSrcGlob.substr(-1) === '/') {
 		// it ends in '/', so it is a filepath and it needs to be glob-ified
-		builtTstGlob += '/**/*.js';
+		mochaSrcGlob += '/**/*.js';
 	}
 	// TODO When I have logging, add a DEBUG level log here that declares
 	// the creation of this task.
 
 	
 	gulp.task('mocha-' + taskSuffix, function() {
-		return gulp.src(builtTstGlob)
+		return gulp.src(mochaSrcGlob)
 			.pipe(mocha({ reporter: 'spec'}));
 	});
 }
