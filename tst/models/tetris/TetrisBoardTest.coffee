@@ -5,6 +5,7 @@ expect = require('chai').expect
 
 ### 1ST PARTY ###
 config = require('../../../src/config')
+Color = require('../../../src/models/Color').Color
 Coordinate = require('../../../src/models/Coordinate').Coordinate
 IShape = require('../../../src/models/tetris/shape/IShape').IShape
 LED = require('../../../src/models/LED').LED
@@ -54,11 +55,10 @@ describe('TetrisBoard', () ->
 			tetrisBoard.advanceActiveShape()
 			assert.isNull(tetrisBoard.getActiveShape())
 			assert.isNull(tetrisBoard._activeShapePosition)
-			ledTable = tetrisBoard._ledTable
-			assert(ledTable.get(config.tetris.TETRIS_LENGTH - 1, 0).getColor().equals(shape.getColor()))
-			assert(ledTable.get(config.tetris.TETRIS_LENGTH - 1, 1).getColor().equals(shape.getColor()))
-			assert(ledTable.get(config.tetris.TETRIS_LENGTH - 1, 2).getColor().equals(shape.getColor()))
-			assert(ledTable.get(config.tetris.TETRIS_LENGTH - 1, 3).getColor().equals(shape.getColor()))
+			assert(tetrisBoard.getColor(config.tetris.TETRIS_LENGTH - 1, 0).equals(shape.getColor()))
+			assert(tetrisBoard.getColor(config.tetris.TETRIS_LENGTH - 1, 1).equals(shape.getColor()))
+			assert(tetrisBoard.getColor(config.tetris.TETRIS_LENGTH - 1, 2).equals(shape.getColor()))
+			assert(tetrisBoard.getColor(config.tetris.TETRIS_LENGTH - 1, 3).equals(shape.getColor()))
 		)
 		it('Returns true when it successfully advances the active shape.', () ->
 			tetrisBoard = new TetrisBoard()
@@ -93,7 +93,7 @@ describe('TetrisBoard', () ->
 		it('Does not move the activeShape down one if it would collide with occupied squares.', () ->
 			activeShapePosition = new Coordinate(config.tetris.TETRIS_LENGTH - 2, 0)
 			# fill in a square beneath the active shape
-			tetrisBoard._ledTable.set(activeShapePosition.below().right(), new LED(255, 255, 255))
+			tetrisBoard.setColor(activeShapePosition.below().right(), new Color(255, 255, 255))
 			tetrisBoard._activeShapePosition = activeShapePosition
 			expectedShapePosition = activeShapePosition
 			tetrisBoard.moveShapeDown()
@@ -133,7 +133,7 @@ describe('TetrisBoard', () ->
 		it('Does not move the activeShape left one if it would collide with occupied squares.', () ->
 			activeShapePosition = new Coordinate(config.tetris.TETRIS_LENGTH - 2, 1)
 			# fill in a square left of the active shape
-			tetrisBoard._ledTable.set(activeShapePosition.left(), new LED(255, 255, 255))
+			tetrisBoard.setColor(activeShapePosition.left(), new Color(255, 255, 255))
 			tetrisBoard._activeShapePosition = activeShapePosition
 			expectedShapePosition = activeShapePosition
 			tetrisBoard.moveShapeLeft()
@@ -173,7 +173,7 @@ describe('TetrisBoard', () ->
 		it('Does not move the activeShape right one if it would collide with occupied squares.', () ->
 			activeShapePosition = new Coordinate(config.tetris.TETRIS_LENGTH - 2, config.tetris.TETRIS_WIDTH - 5)
 			# fill in a square right of the active shape
-			tetrisBoard._ledTable.set(activeShapePosition.right(), new LED(255, 255, 255))
+			tetrisBoard.setColor(activeShapePosition.right(), new Color(255, 255, 255))
 			tetrisBoard._activeShapePosition = activeShapePosition
 			expectedShapePosition = activeShapePosition
 			tetrisBoard.moveShapeRight()
@@ -219,7 +219,7 @@ describe('TetrisBoard', () ->
 			activeShapePosition = new Coordinate(0, 0)
 			tetrisBoard._activeShapePosition = activeShapePosition
 			# Occupy a square to prevent rotation
-			tetrisBoard._ledTable.set(activeShapePosition.below().right().right(), new LED(1, 1, 1))
+			tetrisBoard.setColor(activeShapePosition.below().right().right(), new Color(1, 1, 1))
 			expectedFrame = tetrisBoard.getFrame()
 			tetrisBoard.rotateShape()
 			actualFrame = tetrisBoard.getFrame()
@@ -238,12 +238,12 @@ describe('TetrisBoard', () ->
 	describe('#isOccupied(i, j)', () ->
 		it('Returns true if the i,jth square is completely black.', () ->
 			tetrisBoard = new TetrisBoard()
-			tetrisBoard._ledTable.set(0, 0, new LED(0, 0, 0))
+			tetrisBoard.setColor(0, 0, new Color(0, 0, 0))
 			assert(!tetrisBoard.isOccupied(0, 0))
 		)
 		it('Returns false when the i,jth square is non-black.', () ->
 			tetrisBoard = new TetrisBoard()
-			tetrisBoard._ledTable.set(0, 0, new LED(5, 5, 5))
+			tetrisBoard.setColor(0, 0, new Color(5, 5, 5))
 			assert(tetrisBoard.isOccupied(0, 0))
 		)
 		it('Returns true when i is greater than or equal to the length of the board.', () ->
@@ -272,7 +272,7 @@ describe('TetrisBoard', () ->
 			coordinates = TetrisBoard._getTranslatedCoordinates(shape, upperLeftCoordinate)
 		)
 		it('Returns true if any coordinates in the passed array collide with occupied squares.', () ->
-			tetrisBoard._ledTable.set(rowIndex, columnIndex, new LED(1, 1, 1))
+			tetrisBoard.setColor(rowIndex, columnIndex, new Color(1, 1, 1))
 			assert(tetrisBoard.isColliding(coordinates))
 		)
 		it('Returns false if none of the coordinates in the passed array collide with occupied squares.', () ->
@@ -284,15 +284,15 @@ describe('TetrisBoard', () ->
 			tetrisBoard = new TetrisBoard()
 			row = config.tetris.TETRIS_LENGTH - 1
 			for j in [0..tetrisBoard.width() - 1]
-				tetrisBoard._ledTable.set(row, j, new LED(1, 1, 1))
+				tetrisBoard.setColor(row, j, new Color(1, 1, 1))
 			assert.strictEqual(tetrisBoard.isFull(row), true)
 		)
 		it('Returns false when at least one of the squares in the ith row is not occupied.', () ->
 			tetrisBoard = new TetrisBoard()
 			row = config.tetris.TETRIS_LENGTH - 1
 			for j in [0..tetrisBoard.width() - 1]
-				tetrisBoard._ledTable.set(row, j, new LED(1, 1, 1))
-			tetrisBoard._ledTable.set(row, 0, new LED(0, 0, 0))
+				tetrisBoard.setColor(row, j, new Color(1, 1, 1))
+			tetrisBoard.setColor(row, 0, new Color(0, 0, 0))
 			assert.strictEqual(tetrisBoard.isFull(row), false)
 		)
 		it('Returns false when row is out of bounds.', () ->
@@ -310,12 +310,12 @@ describe('TetrisBoard', () ->
 		)
 		it('Colors inactive squares that have not yet been cleared.', () ->
 			tetrisBoard = new TetrisBoard()
-			led1 = new LED(50, 50, 50)
-			led2 = new LED(100, 100, 100)
-			tetrisBoard._ledTable.set(0, 0, led1)
-			tetrisBoard._ledTable.set(tetrisBoard.length() - 1, tetrisBoard.width() - 1, led2)
+			color1 = new Color(50, 50, 50)
+			color2 = new Color(100, 100, 100)
+			tetrisBoard.setColor(0, 0, color1)
+			tetrisBoard.setColor(tetrisBoard.length() - 1, tetrisBoard.width() - 1, color2)
 			frame = tetrisBoard.getFrame()
-			assert.deepEqual(tetrisBoard._ledTable, frame)
+			assert(tetrisBoard.getColor(i, j).equals(frame.get(i, j).getColor())) for j in [0..tetrisBoard.width() - 1] for i in [0..tetrisBoard.length() - 1]
 		)
 		it('Colors the squares occupied by the activeShape.', () ->
 			tetrisBoard = new TetrisBoard()

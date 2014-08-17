@@ -14,7 +14,7 @@ class exports.LED
 			@color = new Color(args[0], args[1], args[2])
 		else if (args.length == 1)
 			assert.instanceOf(args[0], Color, 'The single argument must be an instance of Color')
-			@color = args[0]
+			@color = args[0].copy()
 			
 		else if (args.length == 0)
 			@color = new Color(0, 0, 0)

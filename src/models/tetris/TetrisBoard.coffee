@@ -1,9 +1,10 @@
 #### IMPORTS ####
 ### 3RD PARTY ###
-
+assert = require('chai').assert
 ### 1ST PARTY ###
 config = require('../../config')
 Coordinate = require('../Coordinate').Coordinate
+Color = require('../Color').Color
 LED = require('../LED').LED
 LEDTable = require('../LEDTable').LEDTable
 IShape = require('./shape/IShape').IShape
@@ -14,11 +15,11 @@ TETRIS_WIDTH = config.tetris.TETRIS_WIDTH
 SHAPE_STARTING_POSITION = new Coordinate(-1, Math.floor(TETRIS_WIDTH / 2) - 2)
 
 ##
-# This class models a TetrisBoard by wrapping an LEDTable object.
+# This class models a TetrisBoard by a 2D array of Color objects.
 ##
 class exports.TetrisBoard
 	
-	@_ledTable
+	@_colors
 	@_activeShape
 	
 	##	
@@ -27,15 +28,18 @@ class exports.TetrisBoard
 	@_activeShapePosition
 
 	constructor: () ->
-		@_ledTable = new LEDTable(TETRIS_LENGTH, TETRIS_WIDTH)
+		@_colors = new LEDTable(TETRIS_LENGTH, TETRIS_WIDTH)
+		@_colors = [0..TETRIS_LENGTH - 1].map (i) ->
+				[0..TETRIS_WIDTH - 1].map (j) ->
+					new Color()
 		@_activeShapePosition = SHAPE_STARTING_POSITION
 	
 
 	advanceActiveShape: () ->
 		if !(@moveShapeDown())
-			# Lock the active shape into the @_ledTable
+			# Lock the active shape into the @_colors
 			for coordinate in TetrisBoard._getTranslatedCoordinates(@_activeShape, @_activeShapePosition)
-				@_ledTable.set(coordinate, new LED(@_activeShape.getColor()))
+				@_colors[coordinate.i][coordinate.j] = @_activeShape.getColor().copy()
 			@_activeShape = null
 			@_activeShapePosition = null
 			return false
@@ -84,8 +88,8 @@ class exports.TetrisBoard
 		else if (i < 0)
 			return false
 
-		blackLED = new LED(0, 0, 0)
-		if (!@_ledTable.get(i, j).equals(blackLED))
+		black = new Color(0, 0, 0)
+		if (!@_colors[i][j].equals(black))
 			return true
 
 		return false
@@ -134,19 +138,18 @@ class exports.TetrisBoard
 	_copyFromAbove: (row) ->
 		if(row == 0)
 			for j in [0..@width() - 1]
-				@_ledTable.set(row, j, new LED(0, 0, 0))
+				@_colors[row][j] = new Color(0, 0, 0)
 
 		else
 			for j in [0..@width() - 1]
-				@_ledTable.set(row, j, @_ledTable.get(row - 1, j))
-		
+				@_colors[row][j] = @_colors[row - 1][j]
 
 	##
 	# Copy the ledTable state. Then add the active shape to it.
 	# Return the result.
 	##
 	getFrame: () ->
-		frame = @_ledTable.copy()
+		frame = LEDTable.from2DColorArray(@_colors)
 		
 		if @_activeShape?
 			for coordinate in TetrisBoard._getTranslatedCoordinates(@_activeShape, @_activeShapePosition)
@@ -161,13 +164,45 @@ class exports.TetrisBoard
 	# Get the length of this tetris board.
 	##
 	length: () ->
-		return @_ledTable.length()
+		return @_colors.length
 
 	##
 	# Get the width of this tetris board.
 	##
 	width: () ->
-		return @_ledTable.width()
+		return @_colors[0].length
+
+	getColor: (args...) ->
+		i = j = null
+		if(args.length == 1)
+			assert.instanceOf(args[0], Coordinate, 'A single argument must be an instance of Coordinate.')
+			i = args[0].i
+			j = args[0].j
+		else if(args.length == 2)
+			i = args[0]
+			j = args[1]
+		else
+			throw new ArgumentError('#get(args...) accepts only 1 or 2 arguments')
+		return @_colors[i][j]
+
+	setColor: (args...) ->
+		i = j = color = null
+		if(args.length == 2)
+			assert.instanceOf(args[0], Coordinate, 'The first of two arguments must be an instance of Coordinate.')
+			assert.instanceOf(args[1], Color, 'The second of two arguments must be an instance of Color.')
+			i = args[0].i
+			j = args[0].j
+			color = args[1]
+		else if(args.length == 3)
+			assert.instanceOf(args[2], Color, 'The third of three arguments must be an instance of Color.')
+			i = args[0]
+			j = args[1]
+			color = args[2]
+		else
+			throw new ArgumentError('#get(args...) accepts only 2 or 3 arguments')
+
+		@_colors[i][j] = color
+		return
 
 	getActiveShape: () ->
 		return @_activeShape

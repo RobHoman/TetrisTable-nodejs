@@ -74,8 +74,8 @@ describe('LEDTable', () ->
 		it('Converts a two-dimensional array of colors into an LEDTable with the same coloring.', () ->
 			length = 10
 			width = 20
-			colorArray = [0..length - 1].map (i) =>
-				[0..width - 1].map (j) =>
+			colorArray = [0..length - 1].map (i) ->
+				[0..width - 1].map (j) ->
 					new Color(20, 20, 20)
 			ledTable = LEDTable.from2DColorArray(colorArray)
 			assert(ledTable.get(i, j).getColor().equals(new Color(20, 20, 20))) for j in [0..width - 1] for i in [0..length - 1]
