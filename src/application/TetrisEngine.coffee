@@ -15,47 +15,45 @@ LED = require('../models/LED').LED
 LEDTable = require('../models/LEDTable').LEDTable
 TetrisBoard = require('../models/tetris/TetrisBoard').TetrisBoard
 
-ENGINE_HZ = 5 # Could vary this value over time as the game speeds up
+ENGINE_HZ = 3 # Could vary this value over time as the game speeds up
 
 class exports.TetrisEngine
 
-	@inputEventEmitter
-	@outputManager
-	@engineEventBus
-	@tetrisBoard
-	@shapeCounter
+	@_inputEventEmitter
+	@_outputManager
+	@_engineEventBus
+	@_tetrisBoard
 
-	constructor: (@inputEventEmitter, @outputManager) ->
-		@engineEventBus = new ClockedEventEmitter()
-		@engineEventBus.on('clockTick', () =>
+	constructor: (@_inputEventEmitter, @_outputManager) ->
+		@_engineEventBus = new ClockedEventEmitter()
+		@_engineEventBus.on('clockTick', () =>
 			this.onUpdateModels()
 		)
-		@tetrisBoard = new TetrisBoard()
-		@tetrisBoard.setActiveShape(new IShape())
+		@_tetrisBoard = new TetrisBoard()
+		@_tetrisBoard.setActiveShape(new IShape())
 
-		@inputEventEmitter.on('keypress', (key) =>
+		@_inputEventEmitter.on('keypress', (key) =>
 			if (key == 'up')
-				@tetrisBoard.rotateShape()
+				@_tetrisBoard.rotateShape()
 			else if (key == 'right')
-				@tetrisBoard.moveShapeRight()
+				@_tetrisBoard.moveShapeRight()
 			else if (key == 'down')
-				@tetrisBoard.moveShapeDown()
+				@_tetrisBoard.moveShapeDown()
 			else if (key == 'left')
-				@tetrisBoard.moveShapeLeft()
+				@_tetrisBoard.moveShapeLeft()
 
-			@outputManager.setNextFrame(@tetrisBoard.getFrame())
+			@_outputManager.setNextFrame(@_tetrisBoard.getFrame())
 		)
-		@shapeCounter = 0
 
 	start: () ->
-		@engineEventBus.emitOnInterval(1000 / ENGINE_HZ, 'clockTick')
+		@_engineEventBus.emitOnInterval(1000 / ENGINE_HZ, 'clockTick')
 
 	onUpdateModels: () ->
-		if(!@tetrisBoard.advanceActiveShape())
+		if(!@_tetrisBoard.advanceActiveShape())
 			# clear full rows
 			for i in [config.tetris.TETRIS_LENGTH - 1..0]
-				while(@tetrisBoard.isFull(i))
-					@tetrisBoard.deleteRow(i)
+				while(@_tetrisBoard.isFull(i))
+					@_tetrisBoard.deleteRow(i)
 
 			# give the board a new shape
 			nextShapeType = getRandomInt(0, 7)
@@ -75,9 +73,9 @@ class exports.TetrisEngine
 			else if(nextShapeType == 6)
 				shape = new ZShape()
 
-			@tetrisBoard.setActiveShape(shape)
+			@_tetrisBoard.setActiveShape(shape)
 
-		@outputManager.setNextFrame(@tetrisBoard.getFrame())
+		@_outputManager.setNextFrame(@_tetrisBoard.getFrame())
 ## 
 # Returns a random integer between min (included) and max (excluded).
 ##
