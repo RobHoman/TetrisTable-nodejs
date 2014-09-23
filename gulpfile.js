@@ -8,7 +8,9 @@ var gutil = require('gulp-util');
 var clean = require('gulp-clean');
 var coffee = require('gulp-coffee');
 var mocha = require('gulp-mocha');
+var nodemon = require('gulp-nodemon');
 var path = require('path');
+var livereload = require('gulp-livereload');
 /* 1st Party */
 
 /** END IMPPORTS **/
@@ -41,13 +43,31 @@ gulp.task('coffee-tst', function() {
 });
 
 gulp.task('mocha', ['coffee', 'coffee-tst'], function () {
-	gulp.src(builtTstGlob)
+	return gulp.src(builtTstGlob)
 		.pipe(mocha({ reporter: 'spec' }));
 });
 
 gulp.task('clean', function() {
 	return gulp.src(buildDir, { read: false })
 		.pipe(clean());
+});
+
+var nodemon_instance;
+gulp.task('nodemon', ['coffee', 'coffee-tst'], function () {
+	if (!nodemon_instance) {
+		nodemon_instance = nodemon({
+			script: 'build/src/bootstrap.js',
+			ext: 'coffee',
+		}).on('restart', function () {
+			console.log('Restarting...');
+		});
+	} else {
+		nodemon_instance.emit('restart');
+	}
+});
+
+gulp.task('watch', ['nodemon'], function() {
+	return gulp.watch([srcGlob, tstGlob], ['nodemon', 'mocha']).on;
 });
 
 glob.sync(builtTstGlob).forEach(function(filePath) {
