@@ -47,7 +47,6 @@ inputEventEmitter = new EventEmitter()
 allWebSockets.on('connection', (socket) ->
 	console.log('IO received connection.')
 	socket.on('keypress', (data) ->
-		console.log('Socket emitted input data:', data)
 		inputEventEmitter.emit('keypress', data)
 	)
 )
