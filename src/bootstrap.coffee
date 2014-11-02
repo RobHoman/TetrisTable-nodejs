@@ -21,6 +21,7 @@ app = express()
 # For serving assets
 app.use('/css', express.static('assets/css'))
 app.use('/js', express.static('assets/js'))
+app.use('/images', express.static('assets/images')) # TODO: use a CDN for assets
 app.use('/bower', express.static('bower_components/'))
 
 app.use(express.bodyParser()) # Used to parse POST payload
@@ -29,6 +30,7 @@ app.use(express.bodyParser()) # Used to parse POST payload
 # Bootstrap the controllers
 ##
 require('./controllers/LEDTableController')(app, TABLE_LENGTH, TABLE_WIDTH)
+require('./controllers/EmberController')(app)
 
 server = app.listen(3000, () ->
 	console.log('Listening on port %d', server.address().port)
@@ -70,6 +72,7 @@ outputEventBus.emitOnInterval(1000 / FPS, 'sendOutput')
 ##
 tetrisEngine = new TetrisEngine(inputEventEmitter, outputManager)
 
-tetrisEngine.start()
+## TODO: Re-enable this. It is disabled while I work on integrating ember
+# tetrisEngine.start()
 
 

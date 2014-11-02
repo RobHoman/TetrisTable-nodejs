@@ -2,8 +2,16 @@ extends base
 
 //- Include mixins
 
-block append css
 //- Include page specific css here.
+block append css
+      link(rel='stylesheet', href='/css/styles.css', type='text/css')
+			link(rel='stylesheet', href='/bower/spectrum/spectrum.css')
+
+//- Include page specific javascript here.
+block append javascript
+			script(type='text/javascript' src='/bower/spectrum/spectrum.js')
+			script(type='text/javascript' src='/socket.io/socket.io.js')
+			script(type='text/javascript' src='/js/socketTest.js')
 
 block content
 	center
